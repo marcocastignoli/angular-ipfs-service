@@ -1,0 +1,26 @@
+My identifiers: 
+<ul>
+    <li *ngFor="let a of addresses | async">{{a}}</li>
+</ul>
+
+<hr/>
+Connect to peer:
+<input type="text" #peer>
+<button type="submit" (click)='addPeer(peer.value)'>Add</button>
+
+<hr/>
+<a (click)="displayPeerList=!displayPeerList">Peers ({{ (peers | async)?.length}})</a>:
+<ul [hidden]="!displayPeerList" style="max-height: 300px; overflow-y:scroll;">
+    <li *ngFor="let p of peers | async">{{p}}</li>
+</ul>
+
+<hr/>
+Publish something
+<textarea type="text" #message></textarea>
+<button type="submit" (click)='publish(message.value)'>Publish</button>
+
+<hr/>
+Messages:
+<ul>
+    <li *ngFor="let m of messages">{{m}}</li>
+</ul>
