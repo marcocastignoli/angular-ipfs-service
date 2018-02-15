@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import * as IPFS from 'ipfs';
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class IpfsService {
   node: IPFS
-  
+
   constructor() {
     this.node = new IPFS({
       repo: String(Math.random() + Date.now()),
@@ -65,12 +66,29 @@ export class IpfsService {
     })
   }
 
-  peers(){
+  peers() {
     return Observable.create(observer => {
       this.node._libp2pNode.on('peer:connect', peer => {
         observer.next(peer);
       })
     });
+  }
+
+  get(hash) {
+    return Observable.create(observer => {
+      try {
+        this.node.files.get(hash, function (err, files) {
+          if (err) {
+            throw Observable.throw("Not found")
+          }
+          observer.next(files);
+          observer.complete();
+        })
+      } catch(e) {
+        throw Observable.throw(e)
+      }
+    })
+
   }
 
 }

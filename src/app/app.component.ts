@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IpfsService } from './ipfs/ipfs.service';
 import { Observable } from "rxjs/Observable";
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import 'rxjs/add/operator/catch';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +18,9 @@ export class AppComponent {
   ipfs
   displayPeerList = false
 
-  constructor(ipfs: IpfsService, private route: ActivatedRoute) {
+  image: SafeUrl
+
+  constructor(ipfs: IpfsService, private route: ActivatedRoute, private sanitizer: DomSanitizer) {
     this.messages = []
     this.peers = []
     this.ipfs = ipfs
@@ -52,10 +56,29 @@ export class AppComponent {
         this.peers.push(peer.id._idB58String)
       })
       this.addresses = this.ipfs.addresses()
+      //this.getFile("QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF")
     })
   }
 
   publish(message) {
     this.ipfs.pub("hello", message)
+  }
+
+  getFile(hash) {
+    this.image = this.sanitizer.bypassSecurityTrustUrl("https://icons8.com/preloaders/preloaders/4/Fading%20balls.gif")
+    this.ipfs.get(hash).subscribe(
+      files => {
+        files.forEach((file) => {
+          if(file.content){
+            var myArray = file.content;
+            var blob = new Blob([myArray], {'type': 'image/png'});
+            this.image = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
+          }
+        })
+      }, 
+      err => {
+        this.image = false
+      }
+    )
   }
 }

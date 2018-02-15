@@ -10,7 +10,7 @@ Connect to peer:
 
 <hr/>
 <a (click)="displayPeerList=!displayPeerList">Peers ({{ (peers)?.length}})</a>:
-<ul [hidden]="!displayPeerList" style="max-height: 300px; overflow-y:scroll;">
+<ul [hidden]="!displayPeerList" style="max-height: 200px; overflow-y:scroll;">
     <li *ngFor="let p of peers">{{p}}</li>
 </ul>
 
@@ -21,6 +21,14 @@ Publish something
 
 <hr/>
 Messages:
-<ul>
+<ul style="max-height: 200px; overflow-y:scroll;">
     <li *ngFor="let m of messages">{{m}}</li>
 </ul>
+
+<hr/>
+Image (QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF):
+<input type="text" #hash>
+<button type="submit" (click)='getFile(hash.value)'>Add</button>
+<br/>
+<br/>
+<img *ngIf="image" [src]="image"/>
