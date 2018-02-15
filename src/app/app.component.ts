@@ -22,7 +22,7 @@ export class AppComponent {
     this.ipfs = ipfs
     this.route.queryParams.subscribe(params => {
       this.ipfs.ready().subscribe(() => {
-        if (typeof params.peer === "string") {
+        if (typeof params.peer === "string" && params.peer !== "") {
           this.ipfs.connectPeer(params.peer);
         } else {
           for (let i in params.peer) {
