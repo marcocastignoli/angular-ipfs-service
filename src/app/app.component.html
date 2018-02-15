@@ -9,9 +9,9 @@ Connect to peer:
 <button type="submit" (click)='addPeer(peer.value)'>Add</button>
 
 <hr/>
-<a (click)="displayPeerList=!displayPeerList">Peers ({{ (peers | async)?.length}})</a>:
+<a (click)="displayPeerList=!displayPeerList">Peers ({{ (peers)?.length}})</a>:
 <ul [hidden]="!displayPeerList" style="max-height: 300px; overflow-y:scroll;">
-    <li *ngFor="let p of peers | async">{{p}}</li>
+    <li *ngFor="let p of peers">{{p}}</li>
 </ul>
 
 <hr/>

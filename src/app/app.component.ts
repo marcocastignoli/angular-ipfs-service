@@ -18,6 +18,7 @@ export class AppComponent {
 
   constructor(ipfs: IpfsService, private route: ActivatedRoute) {
     this.messages = []
+    this.peers = []
     this.ipfs = ipfs
     this.route.queryParams.subscribe(params => {
       this.ipfs.ready().subscribe(() => {
@@ -47,8 +48,10 @@ export class AppComponent {
       this.ipfs.sub("hello").subscribe(data => {
         this.messages.push(data.toString())
       });
+      this.ipfs.peers().subscribe(peer => {
+        this.peers.push(peer.id._idB58String)
+      })
       this.addresses = this.ipfs.addresses()
-      this.peers = this.ipfs.peers();
     })
   }
 

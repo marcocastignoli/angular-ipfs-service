@@ -6,7 +6,7 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class IpfsService {
   node: IPFS
-  peersList: Array<string>
+  
   constructor() {
     this.node = new IPFS({
       repo: String(Math.random() + Date.now()),
@@ -21,7 +21,6 @@ export class IpfsService {
         }
       }
     })
-    this.peersList = []
   }
 
   ready() {
@@ -67,10 +66,11 @@ export class IpfsService {
   }
 
   peers(){
-    this.node._libp2pNode.on('peer:connect', peer => {
-      this.peersList.push(peer.id._idB58String)
-    })
-    return Observable.of(this.peersList);
+    return Observable.create(observer => {
+      this.node._libp2pNode.on('peer:connect', peer => {
+        observer.next(peer);
+      })
+    });
   }
 
 }
